@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
     <router-view/>
   </div>
 </template>
@@ -18,6 +17,26 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin-top: 30px;
+}
+
+.msg,
+.alert-light {
+  color: #cecece;
+  font-size: 80%;
+  font-weight: bold;
+}
+
+.alert-light {
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+.metric-unit {
+  text-transform: uppercase;
+}
+
+.medicine-icon {
+  width: 25px;
 }
 </style>
