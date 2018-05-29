@@ -4,6 +4,10 @@
     <p class="msg">{{ date_msg }}</p>
     <medicaments-list :medicaments="medicaments"></medicaments-list>
     <p class="alert alert-light">{{ alert_msg }}</p>
+    <button type="button" class="btn btn-info btn-lg btn-block fixed-bottom">
+      <i class="fas fa-map-marker-alt"></i> Encontrar Farmácia
+      <span class="msg">Serviço oferecido por Memed</span>
+    </button>
   </div>
 </template>
 
@@ -19,7 +23,7 @@ export default {
     return {
       doctor: 'Dr. Memed',
       date: '04/05/2018',
-      msg: [
+      msgs: [
         'Prescrição criada em ',
         'A Prescrição Digital Memed não dispensa a apresentação da sua versão impressa à farmácia. O médico responsável por esta prescrição não possui qualquer tipo de vínculo com os preços e/ou farmácias apresentados.'
       ],
@@ -47,10 +51,10 @@ export default {
   },
   computed: {
     date_msg () {
-      return this.msg[0] + this.date
+      return this.msgs[0] + this.date
     },
     alert_msg () {
-      return this.msg[1]
+      return this.msgs[1]
     }
   }
 }

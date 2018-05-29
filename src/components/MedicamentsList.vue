@@ -6,7 +6,7 @@
         <img class="medicine-icon" :src="med.icon">
       </td>
       <td style="text-align: left;">
-        <span class="msg">{{ metricUnit(med) }}</span>
+        <span class="msg metric-unit">{{ metricUnit(med) }}</span>
         <br>
         <span>{{ med.name }}</span>
       </td>
