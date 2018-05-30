@@ -17,7 +17,13 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 30px;
+  margin-top: 0px;
+}
+
+.msg {
+  color: #cecece;
+  font-size: 0.7em;
+  font-weight: bold;
 }
 
 .alert-light {
@@ -25,16 +31,8 @@ export default {
   text-justify: inter-word;
 }
 
-.msg,
-.alert-light {
-  color: #cecece;
-  font-size: 0.7em;
-  font-weight: bold;
-}
-
 .btn .msg {
   font-size: 0.5em;
-  display: block;
 }
 
 .metric-unit {
@@ -43,10 +41,5 @@ export default {
 
 .medicine-icon {
   width: 25px;
-}
-
-.fixed-bottom {
-    position: fixed;
-    bottom: 0px;
 }
 </style>

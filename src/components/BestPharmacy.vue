@@ -1,15 +1,18 @@
 <template>
-  <div class="pt-2">
-    <h3>{{ title }}</h3>
-    <p class="msg">{{ date_msg }}</p>
+  <div class="pt-1">
+    <div class="sticky-top text-left bg-white">
+      <div class="d-inline-block align-top">
+        <button class="btn btn-light">
+          <i class="fas fa-arrow-left"></i>
+        </button>
+      </div>
+      <div class="d-inline-block">
+        <span class="d-block">{{ title }}</span>
+        <span class="msg d-block">{{ button_msg }}</span>
+      </div>
+    </div>
     <medicaments-list :medicaments="medicaments"></medicaments-list>
     <p class="alert alert-light msg">{{ alert_msg }}</p>
-    <button @click="findBestPharmacy()"
-            type="button"
-            class="btn btn-info btn-lg btn-block fixed-bottom">
-      <i class="fas fa-map-marker-alt"></i> Encontrar Farmácia
-      <span class="msg d-block">{{ button_msg }}</span>
-    </button>
   </div>
 </template>
 
@@ -17,16 +20,15 @@
 import MedicamentsList from './MedicamentsList'
 
 export default {
-  name: 'Prescription',
+  name: 'BestPharmacy',
   components: {
     MedicamentsList
   },
   data () {
     return {
-      title: 'Dr. Memed',
-      date: '04/05/2018',
+      title: 'Encontrar Farmácia',
       msgs: [
-        'Prescrição criada em ',
+        '',
         'A Prescrição Digital Memed não dispensa a apresentação da sua versão impressa à farmácia. O médico responsável por esta prescrição não possui qualquer tipo de vínculo com os preços e/ou farmácias apresentados.',
         'Serviço oferecido por Memed'
       ],
@@ -53,9 +55,6 @@ export default {
     }
   },
   computed: {
-    date_msg () {
-      return this.msgs[0] + this.date
-    },
     alert_msg () {
       return this.msgs[1]
     },
@@ -64,9 +63,8 @@ export default {
     }
   },
   methods: {
-    // change route
-    findBestPharmacy () {
-      this.$router.push({ name: 'best-pharmacy' })
+    backToPrescription () {
+      this.$router.go(-1)
     }
   }
 }
