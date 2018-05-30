@@ -5,10 +5,12 @@
       <td style="vertical-align: middle;">
         <img class="medicine-icon" :src="med.icon">
       </td>
-      <td style="text-align: left;">
+      <td class="text-left">
         <span class="msg metric-unit">{{ metricUnit(med) }}</span>
         <br>
-        <span>{{ med.name }}</span>
+        <span class="font-weight-bold">{{ med.name }}</span>
+        <br>
+        <span v-if="med.price" class="price">{{ med.price }}</span>
       </td>
     </tr>
   </tbody>

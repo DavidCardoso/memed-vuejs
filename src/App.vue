@@ -42,4 +42,13 @@ export default {
 .medicine-icon {
   width: 25px;
 }
+
+.price {
+  font-weight: bold;
+  color: #0cf;
+}
+
+.price:before {
+  content: 'R$ ';
+}
 </style>

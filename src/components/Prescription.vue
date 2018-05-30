@@ -66,7 +66,7 @@ export default {
   methods: {
     // change route
     findBestPharmacy () {
-      this.$router.push({ name: 'best-pharmacy' })
+      this.$router.push({ name: 'find-best-pharmacy' })
     }
   }
 }
