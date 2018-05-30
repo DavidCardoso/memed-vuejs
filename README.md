@@ -1,6 +1,6 @@
 # memed-vuejs
 
-> Frontend do Desafio Checkout de Medicamentosda Memed
+> Frontend | Desafio Checkout de Medicamentos | Memed
 
 ## Build Setup
 
