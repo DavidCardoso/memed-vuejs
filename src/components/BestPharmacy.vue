@@ -10,7 +10,7 @@
         <span>{{ distance }}</span>
         <br>
         <span>Total: </span>
-        <span class="price">{{ total_price }}</span>
+        <span class="price">{{ pharmacy.total_price }}</span>
       </td>
     </tr>
   </tbody>
@@ -32,9 +32,6 @@ export default {
   computed: {
     distance () {
       return '(a ' + this.pharmacy.distance.text + ')'
-    },
-    total_price () {
-      return 99.99
     }
   }
 }

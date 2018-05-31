@@ -121,6 +121,7 @@ export default {
           text: '5 minutos',
           value: 313
         },
+        total_price: 99.99,
         status: 'OK'
       }
     }
