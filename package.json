@@ -1,7 +1,7 @@
 {
   "name": "memed-vuejs",
   "version": "1.0.0",
-  "description": "Frontend do Desafio Checkout de Medicamentos da Memed",
+  "description": "Frontend | Desafio Checkout de Medicamentos | Memed",
   "author": "David Cardoso",
   "private": true,
   "scripts": {
@@ -13,6 +13,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1"
   },
