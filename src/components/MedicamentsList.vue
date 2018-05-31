@@ -37,4 +37,12 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.metric-unit {
+  text-transform: uppercase;
+}
+
+.medicine-icon {
+  width: 25px;
+}
+</style>

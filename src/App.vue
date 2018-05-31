@@ -35,14 +35,6 @@ export default {
   font-size: 0.5em;
 }
 
-.metric-unit {
-  text-transform: uppercase;
-}
-
-.medicine-icon {
-  width: 25px;
-}
-
 .price {
   font-weight: bold;
   color: #0cf;
