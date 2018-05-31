@@ -19,7 +19,7 @@
 
 <script>
 export default {
-  name: 'pharmacy',
+  name: 'BestPharmacy',
   props: {
     pharmacy: {
       type: Object,
