@@ -23,17 +23,8 @@ import MedicamentsList from './MedicamentsList'
 import BestPharmacy from './BestPharmacy'
 import axios from 'axios'
 
-let requestConfig = {
-  method: 'GET',
-  mode: 'no-cors',
-  headers: {
-    'Access-Control-Allow-Origin': '*',
-    'Accept': 'application/json',
-    'Content-Type': 'application/json'
-  }
-}
-let pharmaciesEndpoint = 'https://wydfdauvw5.execute-api.sa-east-1.amazonaws.com/desafio/farmacias'
-let matrixEndpoint = 'https://maps.googleapis.com/maps/api/distancematrix/json?key=AIzaSyAm8v-bsDtp5aHgT-0LxdD08c1vWDwJ1QE'
+const pharmaciesEndpoint = 'https://wydfdauvw5.execute-api.sa-east-1.amazonaws.com/desafio/farmacias'
+const matrixEndpoint = 'https://maps.googleapis.com/maps/api/distancematrix/json'
 
 export default {
   name: 'FindBestPharmacy',
@@ -82,51 +73,63 @@ export default {
     button_msg () {
       return this.msgs[2]
     },
-    // matrix api destinations
+    // matrix API destinations
     destinations () {
-      let destinations = []
+      const destinations = []
       this.pharmacies.forEach(function (item, index) {
         destinations.push(item.attributes.lat + ',' + item.attributes.lon)
       })
       return destinations
-    },
-    // matrix api full resource endpoint
-    matrix () {
-      return matrixEndpoint +
-        '&origins=' + this.getUserLocation().join(',') +
-        '&destinations=' + this.destinations.join('|')
     }
   },
   // get pharmacies
   mounted () {
-    axios.get(pharmaciesEndpoint)
-      .then(response => {
-        this.pharmacies = response.data.data
-        this.updatePharmacies()
-      })
-      .catch(error => {
-        console.log('Error trying to fetch pharmacies: ' + error)
-      })
+    this.getPharmacies()
   },
   methods: {
+    // history.back()
     backToPrescription () {
       this.$router.go(-1)
+    },
+    // matrix API full resource URL
+    matrixUrl () {
+      return matrixEndpoint +
+        `?key=AIzaSyAm8v-bsDtp5aHgT-0LxdD08c1vWDwJ1QE` +
+        '&origins=' + this.getUserLocation().join(',') +
+        '&destinations=' + this.destinations.join('|')
     },
     // user device | memed geolocation
     getUserLocation () {
       return [-23.5648304, -46.6436604]
     },
-    // update pharmacies data with the matrix api response (distance, duration)
-    updatePharmacies () {
-      // const matrixRequest = new Request(this.matrix, requestConfig)
-      axios.get(this.matrix, requestConfig)
+    // get pharmacies basic data
+    getPharmacies () {
+      axios.get(pharmaciesEndpoint)
         .then(response => {
-          console.log(response)
+          this.pharmacies = response.data.data
+          this.getPharmaciesMedicaments()
         })
         .catch(error => {
-          console.log('Error trying to fetch from Matrix API: ' + error)
+          console.log(`Error trying to fetch pharmacies: ${error}`)
         })
     },
+    // get pharmacies medicaments data
+    getPharmaciesMedicaments () {
+      this.pharmacies.forEach((item, index) => {
+        axios.get(`${pharmaciesEndpoint}/${item.id}`)
+          .then(response => {
+            item.medicamentos = response.data.data.attributes.medicamentos
+          })
+          .catch(error => {
+            console.log(`Error trying to fetch pharmacies (id ${item.id}): ${error}`)
+          })
+      })
+    },
+    // get pharmacies matrix data (distance, duration)
+    getPharmaciesMatrix () {
+      return {}
+    },
+    // find the best pharmacy based on distance and total price of the prescripted medicaments
     getBestPharmacy () {
       return {
         type: 'farmacias',
