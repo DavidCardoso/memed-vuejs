@@ -9,12 +9,12 @@
       </div>
       <div class="d-inline-block">
         <span class="d-block font-weight-bold">{{ title }}</span>
-        <span class="msg d-block">{{ button_msg }}</span>
+        <span class="msg d-block">{{ buttonMsg }}</span>
       </div>
     </div>
     <best-pharmacy :pharmacy="getBestPharmacy()"></best-pharmacy>
     <medicaments-list :medicaments="medicaments"></medicaments-list>
-    <p class="alert alert-light msg">{{ alert_msg }}</p>
+    <p class="alert alert-light msg">{{ alertMsg }}</p>
   </div>
 </template>
 
@@ -22,9 +22,9 @@
 import MedicamentsList from './MedicamentsList'
 import BestPharmacy from './BestPharmacy'
 import axios from 'axios'
+import gapi from 'google-distance-api'
 
 const pharmaciesEndpoint = 'https://wydfdauvw5.execute-api.sa-east-1.amazonaws.com/desafio/farmacias'
-const matrixEndpoint = 'https://maps.googleapis.com/maps/api/distancematrix/json'
 
 export default {
   name: 'FindBestPharmacy',
@@ -67,10 +67,10 @@ export default {
     }
   },
   computed: {
-    alert_msg () {
+    alertMsg () {
       return this.msgs[1]
     },
-    button_msg () {
+    buttonMsg () {
       return this.msgs[2]
     },
     // matrix API destinations
@@ -91,43 +91,63 @@ export default {
     backToPrescription () {
       this.$router.go(-1)
     },
-    // matrix API full resource URL
-    matrixUrl () {
-      return matrixEndpoint +
-        `?key=AIzaSyAm8v-bsDtp5aHgT-0LxdD08c1vWDwJ1QE` +
-        '&origins=' + this.getUserLocation().join(',') +
-        '&destinations=' + this.destinations.join('|')
-    },
-    // user device | memed geolocation
+    // get user device | memed geolocation
     getUserLocation () {
-      return [-23.5648304, -46.6436604]
+      return ['-23.5648304,-46.6436604']
     },
     // get pharmacies basic data
     getPharmacies () {
       axios.get(pharmaciesEndpoint)
+      // axios.get(process.env.PHARMACIES_ENDPOINT)
         .then(response => {
           this.pharmacies = response.data.data
           this.getPharmaciesMedicaments()
+          this.getPharmaciesMatrix()
         })
         .catch(error => {
           console.log(`Error trying to fetch pharmacies: ${error}`)
         })
     },
-    // get pharmacies medicaments data
+    // get pharmacies medicaments data (name, price)
     getPharmaciesMedicaments () {
-      this.pharmacies.forEach((item, index) => {
-        axios.get(`${pharmaciesEndpoint}/${item.id}`)
+      this.pharmacies.forEach((pharmacy) => {
+        // request all medicaments of each pharmacy
+        axios.get(`${pharmaciesEndpoint}/${pharmacy.id}`)
           .then(response => {
-            item.medicamentos = response.data.data.attributes.medicamentos
+            // keep only the prescripted medicaments
+            pharmacy.medicamentos = response.data.data.attributes.medicamentos.filter(
+              med => this.medicaments.find(x => x.name === med.nome)
+            )
+            // calculate the total price based on the matched medicaments
+            pharmacy.totalPrice = pharmacy.medicamentos.reduce(
+              (total, med) => total + med.preco, 0
+            )
           })
           .catch(error => {
-            console.log(`Error trying to fetch pharmacies (id ${item.id}): ${error}`)
+            console.log(`Error trying to fetch pharmacies (id ${pharmacy.id}): ${error}`)
           })
       })
     },
     // get pharmacies matrix data (distance, duration)
     getPharmaciesMatrix () {
-      return {}
+      // prepare request options
+      const options = {
+        key: process.env.GAPI_KEY,
+        mode: 'driving',
+        origins: this.getUserLocation(),
+        destinations: this.destinations
+      }
+      // request all distance/duration from origins to destinations
+      gapi.distance(options, (error, response) => {
+        if (error) {
+          return console.log(error)
+        }
+        // as known that matrix api returns at the same order of the destinations
+        // it is possible to iterate each pharmacies and set its matrix data
+        response.forEach((item, index) => {
+          this.pharmacies[index].matrix = item
+        })
+      })
     },
     // find the best pharmacy based on distance and total price of the prescripted medicaments
     getBestPharmacy () {
