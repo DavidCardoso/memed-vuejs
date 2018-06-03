@@ -73,18 +73,14 @@ export default {
     buttonMsg () {
       return this.msgs[2]
     },
-    // matrix API destinations
-    destinations () {
-      const destinations = []
-      this.pharmacies.forEach(function (item, index) {
-        destinations.push(item.attributes.lat + ',' + item.attributes.lon)
-      })
-      return destinations
+    pharmacy () {
+      return {}
     }
   },
   // get pharmacies
-  mounted () {
+  created () {
     this.getPharmacies()
+    console.log('created')
   },
   methods: {
     // history.back()
@@ -95,10 +91,17 @@ export default {
     getUserLocation () {
       return ['-23.5648304,-46.6436604']
     },
+    // matrix API destinations
+    getDestinations () {
+      const destinations = []
+      this.pharmacies.forEach(function (item, index) {
+        destinations.push(item.attributes.lat + ',' + item.attributes.lon)
+      })
+      return destinations
+    },
     // get pharmacies basic data
     getPharmacies () {
       axios.get(pharmaciesEndpoint)
-      // axios.get(process.env.PHARMACIES_ENDPOINT)
         .then(response => {
           this.pharmacies = response.data.data
           this.getPharmaciesMedicaments()
@@ -107,6 +110,7 @@ export default {
         .catch(error => {
           console.log(`Error trying to fetch pharmacies: ${error}`)
         })
+      console.log('pharmacies')
     },
     // get pharmacies medicaments data (name, price)
     getPharmaciesMedicaments () {
@@ -127,6 +131,7 @@ export default {
             console.log(`Error trying to fetch pharmacies (id ${pharmacy.id}): ${error}`)
           })
       })
+      console.log('medicaments')
     },
     // get pharmacies matrix data (distance, duration)
     getPharmaciesMatrix () {
@@ -135,7 +140,7 @@ export default {
         key: process.env.GAPI_KEY,
         mode: 'driving',
         origins: this.getUserLocation(),
-        destinations: this.destinations
+        destinations: this.getDestinations()
       }
       // request all distance/duration from origins to destinations
       gapi.distance(options, (error, response) => {
@@ -148,9 +153,12 @@ export default {
           this.pharmacies[index].matrix = item
         })
       })
+      console.log('matrix')
     },
     // find the best pharmacy based on distance and total price of the prescripted medicaments
     getBestPharmacy () {
+      // processamento ...
+      // return this.pharmacies[0]
       return {
         type: 'farmacias',
         id: 1,
