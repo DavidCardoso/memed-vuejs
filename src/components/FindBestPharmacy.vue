@@ -180,15 +180,10 @@ export default {
             preco: 0.46
           }
         ],
-        distance: {
-          text: '1,1 km',
-          value: 1148
+        matrix: {
+          distance: '9,9 km'
         },
-        duration: {
-          text: '5 minutos',
-          value: 313
-        },
-        total_price: 99.99,
+        totalPrice: 99.99,
         status: 'OK'
       }
     }
