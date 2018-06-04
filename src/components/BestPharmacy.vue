@@ -9,8 +9,10 @@
         <span class="font-weight-bold">{{ pharmacy.attributes.nome }}</span>
         <span>{{ distance }}</span>
         <br>
-        <span>Total: </span>
-        <span class="price">{{ pharmacy.totalPrice }}</span>
+        <div v-show="pharmacy.id">
+          <span>Total: </span>
+          <span class="price">{{ pharmacy.totalPrice }}</span>
+        </div>
       </td>
     </tr>
   </tbody>
@@ -26,12 +28,11 @@ export default {
       required: true
     }
   },
-  data () {
-    return {}
-  },
   computed: {
-    distance () {
-      return '(a ' + this.pharmacy.matrix.distance + ')'
+    distance: function () {
+      return this.pharmacy.matrix.distance
+        ? '(a ' + this.pharmacy.matrix.distance + ')'
+        : ''
     }
   }
 }

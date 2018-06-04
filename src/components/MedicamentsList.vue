@@ -26,11 +26,8 @@ export default {
       required: true
     }
   },
-  data () {
-    return {}
-  },
   methods: {
-    metricUnit (med) {
+    metricUnit: function (med) {
       return med.qty + ' ' + med.unit
     }
   }
