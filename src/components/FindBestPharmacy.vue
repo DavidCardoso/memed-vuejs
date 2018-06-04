@@ -21,7 +21,7 @@
 <script>
 import MedicamentsList from './MedicamentsList'
 import BestPharmacy from './BestPharmacy'
-import { mapState } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
 export default {
   name: 'FindBestPharmacy',
@@ -46,18 +46,19 @@ export default {
     buttonMsg: function () {
       return this.msgs[2]
     },
-    ...mapState(['bestPharmacy', 'prescriptedMedicaments'])
+    ...mapState(['bestPharmacy', 'prescriptedMedicaments', 'pharmacies'])
   },
   // get pharmacies
-  created: function () {
-    // this.getPharmacies()
+  mounted: function () {
+    this.fetchPharmacies()
     console.log('created')
   },
   methods: {
     // history.back()
     backToPrescription: function () {
       this.$router.go(-1)
-    }
+    },
+    ...mapActions(['fetchPharmacies'])
   }
 }
 </script>
