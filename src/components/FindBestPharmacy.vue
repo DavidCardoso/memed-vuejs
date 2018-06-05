@@ -12,7 +12,7 @@
         <span class="msg d-block">{{ buttonMsg }}</span>
       </div>
     </div>
-    <best-pharmacy :pharmacy="bestPharmacy"></best-pharmacy>
+    <best-pharmacy></best-pharmacy>
     <medicaments-list :medicaments="prescriptedMedicaments"></medicaments-list>
     <p class="alert alert-light msg">{{ alertMsg }}</p>
   </div>
@@ -21,7 +21,7 @@
 <script>
 import MedicamentsList from './MedicamentsList'
 import BestPharmacy from './BestPharmacy'
-import { mapActions, mapState } from 'vuex'
+import { mapState } from 'vuex'
 
 export default {
   name: 'FindBestPharmacy',
@@ -39,6 +39,12 @@ export default {
       ]
     }
   },
+  mounted: function () {
+    console.log('[1] mounted FindBestPharmacy')
+    if (this.bestPharmacy === undefined) {
+      this.$router.push({ name: 'prescription' })
+    }
+  },
   computed: {
     alertMsg: function () {
       return this.msgs[1]
@@ -46,19 +52,14 @@ export default {
     buttonMsg: function () {
       return this.msgs[2]
     },
-    ...mapState(['bestPharmacy', 'prescriptedMedicaments', 'pharmacies'])
-  },
-  // get pharmacies
-  mounted: function () {
-    this.fetchPharmacies()
-    console.log('find best pharmacy component mounted')
+    // map vuex state
+    ...mapState(['prescriptedMedicaments', 'bestPharmacy'])
   },
   methods: {
     // history.back()
     backToPrescription: function () {
       this.$router.go(-1)
-    },
-    ...mapActions(['fetchPharmacies'])
+    }
   }
 }
 </script>

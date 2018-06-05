@@ -18,6 +18,7 @@ export default new Vuex.Store({
         distance: 0,
         duration: 0
       },
+      medicamentos: [],
       totalPrice: 0
     },
     pharmacies: [],
@@ -46,20 +47,31 @@ export default new Vuex.Store({
     ]
   },
   mutations: {
+    // update pharmacis
     updatePharmacies (state, pharmacies) {
       state.pharmacies = pharmacies
     },
-    updatePharmacy (state, pharmacy) {
-      state.pharmacy = pharmacy
+    // calculate the best pharmacy
+    updateBestPharmacy (state) {
+      const last = state.pharmacies.length - 1
+      state.bestPharmacy = state.pharmacies[last]
+    },
+    // update the price of the prescripted medicaments
+    updatePrescriptedMedicaments (state) {
+      state.prescriptedMedicaments.forEach(function (med) {
+        med.price = state.bestPharmacy.medicamentos.find(function (m) {
+          return m.nome === med.name
+        }).preco
+      })
     }
   },
   actions: {
     // get user device | memed geolocation
-    getUserLocation () {
+    getUserLocation: function () {
       return ['-23.5648304,-46.6436604']
     },
     // matrix API destinations
-    getDestinations ({ state }) {
+    getDestinations: function ({ state }) {
       const destinations = state.pharmacies.reduce(function (result, pharmacy) {
         result.push(pharmacy.attributes.lat + ',' + pharmacy.attributes.lon)
         return result
@@ -87,7 +99,7 @@ export default new Vuex.Store({
                 // calculate the TOTAL PRICE based on the matched medicaments
                 pharmacy.totalPrice = meds.reduce(function (total, med) {
                   return total + med.preco
-                }, 0)
+                }, 0).toFixed(2)
               })
               .catch(function (error) {
                 console.log(`Error trying to fetch pharmacies (id ${pharmacy.id}): ${error}`)
@@ -143,6 +155,13 @@ export default new Vuex.Store({
         // SAVE changes
         commit('updatePharmacies', pharmacies)
       })
+    }
+  },
+  getters: {
+    distance: function (state) {
+      return state.bestPharmacy.matrix.distance
+        ? '(a ' + state.bestPharmacy.matrix.distance + ')'
+        : ''
     }
   }
 })
