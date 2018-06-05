@@ -10,7 +10,7 @@
         <br>
         <span class="font-weight-bold">{{ med.name }}</span>
         <br>
-        <span v-if="med.price" class="price">{{ med.price }}</span>
+        <span v-show="showPrice" class="price">{{ med.price }}</span>
       </td>
     </tr>
   </tbody>
@@ -24,11 +24,16 @@ export default {
     medicaments: {
       type: Array,
       required: true
+    },
+    showPrice: {
+      type: Boolean,
+      default: false
     }
   },
   mounted: function () {
     console.log('[0] mounted MedicamentsList')
   },
+  computed: {},
   methods: {
     metricUnit: function (med) {
       return med.qty + ' ' + med.unit
