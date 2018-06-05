@@ -51,10 +51,12 @@ export default new Vuex.Store({
     updatePharmacies (state, pharmacies) {
       state.pharmacies = pharmacies
     },
-    // calculate the best pharmacy
+    // calculate the best pharmacy (total price VS distance)
     updateBestPharmacy (state) {
-      const last = state.pharmacies.length - 1
-      state.bestPharmacy = state.pharmacies[last]
+      state.pharmacies.sort(function (a, b) {
+        return a.totalPrice - b.totalPrice
+      })
+      state.bestPharmacy = state.pharmacies[0]
     },
     // update the price of the prescripted medicaments
     updatePrescriptedMedicaments (state) {
@@ -66,18 +68,6 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    // get user device | memed geolocation
-    getUserLocation: function () {
-      return ['-23.5648304,-46.6436604']
-    },
-    // matrix API destinations
-    getDestinations: function ({ state }) {
-      const destinations = state.pharmacies.reduce(function (result, pharmacy) {
-        result.push(pharmacy.attributes.lat + ',' + pharmacy.attributes.lon)
-        return result
-      }, [])
-      return destinations
-    },
     // fetch ALL pharmacies data
     fetchPharmacies: async function ({ state, commit, dispatch }) {
       // request PHARMACIES
@@ -155,6 +145,18 @@ export default new Vuex.Store({
         // SAVE changes
         commit('updatePharmacies', pharmacies)
       })
+    },
+    // get user device | memed geolocation
+    getUserLocation: function () {
+      return ['-23.5648304,-46.6436604']
+    },
+    // build maps matrix API destinations
+    getDestinations: function ({ state }) {
+      const destinations = state.pharmacies.reduce(function (result, pharmacy) {
+        result.push(pharmacy.attributes.lat + ',' + pharmacy.attributes.lon)
+        return result
+      }, [])
+      return destinations
     }
   },
   getters: {
