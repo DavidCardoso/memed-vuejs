@@ -51,7 +51,7 @@ export default {
   // get pharmacies
   mounted: function () {
     this.fetchPharmacies()
-    console.log('created')
+    console.log('find best pharmacy component mounted')
   },
   methods: {
     // history.back()
