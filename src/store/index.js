@@ -53,10 +53,20 @@ export default new Vuex.Store({
     },
     // calculate the best pharmacy (total price VS distance)
     updateBestPharmacy (state) {
-      state.pharmacies.sort(function (a, b) {
+      let array = state.pharmacies
+      // duration
+      array.sort(function (a, b) {
+        return a.matrix.durationValue - b.matrix.durationValue
+      })
+      // price
+      array.sort(function (a, b) {
         return a.totalPrice - b.totalPrice
       })
-      state.bestPharmacy = state.pharmacies[0]
+      // distance
+      array.sort(function (a, b) {
+        return a.matrix.distanceValue - b.matrix.distanceValue
+      })
+      state.bestPharmacy = array[0]
     },
     // update the price of the prescripted medicaments
     updatePrescriptedMedicaments (state) {
