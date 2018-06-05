@@ -13,7 +13,7 @@
       </div>
     </div>
     <best-pharmacy></best-pharmacy>
-    <medicaments-list :medicaments="prescriptedMedicaments"></medicaments-list>
+    <medicaments-list :medicaments="prescriptedMedicaments" :showPrice="showPrice"></medicaments-list>
     <p class="alert alert-light msg">{{ alertMsg }}</p>
   </div>
 </template>
@@ -52,8 +52,11 @@ export default {
     buttonMsg: function () {
       return this.msgs[2]
     },
+    showPrice: function () {
+      return true
+    },
     // map vuex state
-    ...mapState(['prescriptedMedicaments', 'bestPharmacy'])
+    ...mapState(['prescriptedMedicaments', 'bestPharmacy', 'pharmacies'])
   },
   methods: {
     // history.back()
