@@ -53,10 +53,6 @@ export default {
     console.log('[2] mounted Prescription')
   },
   methods: {
-    // history.back()
-    backToPrescription: function () {
-      this.$router.go(-1)
-    },
     // change route
     findBestPharmacy () {
       this.$router.push({ name: 'find-best-pharmacy' })
