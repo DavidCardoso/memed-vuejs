@@ -26,6 +26,9 @@ export default {
       required: true
     }
   },
+  mounted: function () {
+    console.log('[0] mounted MedicamentsList')
+  },
   methods: {
     metricUnit: function (med) {
       return med.qty + ' ' + med.unit

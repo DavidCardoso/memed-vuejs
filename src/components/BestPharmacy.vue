@@ -20,20 +20,25 @@
 </template>
 
 <script>
+import { mapState, mapGetters, mapMutations } from 'vuex'
+
 export default {
   name: 'BestPharmacy',
-  props: {
-    pharmacy: {
-      type: Object,
-      required: true
-    }
+  mounted: function () {
+    console.log('[1] mounted BestPharmacy')
+    this.updateBestPharmacy()
+    console.log('[2] mounted BestPharmacy')
+    this.updatePrescriptedMedicaments()
+    console.log('[3] mounted BestPharmacy')
   },
   computed: {
-    distance: function () {
-      return this.pharmacy.matrix.distance
-        ? '(a ' + this.pharmacy.matrix.distance + ')'
-        : ''
-    }
+    ...mapState({
+      pharmacy: 'bestPharmacy'
+    }),
+    ...mapGetters(['distance'])
+  },
+  methods: {
+    ...mapMutations(['updateBestPharmacy', 'updatePrescriptedMedicaments'])
   }
 }
 </script>
