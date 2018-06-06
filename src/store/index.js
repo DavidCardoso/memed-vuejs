@@ -64,13 +64,13 @@ export default new Vuex.Store({
       array.sort(function (a, b) {
         return a.matrix.duration.value - b.matrix.duration.value
       })
-      // price
+      // price with error margin of 10%
       array.sort(function (a, b) {
-        return a.totalPrice - b.totalPrice
+        return (a.totalPrice * 0.9) - b.totalPrice
       })
-      // distance
+      // distance with error margin of 100 meters (0.1 km)
       array.sort(function (a, b) {
-        return a.matrix.distance.value - b.matrix.distance.value
+        return (a.matrix.distance.value - 100) - b.matrix.distance.value
       })
       // change the state
       state.bestPharmacy = array[0]
@@ -186,7 +186,7 @@ export default new Vuex.Store({
   getters: {
     printDistanceDuration: function (state) {
       return state.bestPharmacy.matrix
-        ? `(a ${state.bestPharmacy.matrix.distance.text}, em ${state.bestPharmacy.matrix.duration.text} de carro)`
+        ? `(a ${state.bestPharmacy.matrix.distance.text}, ${state.bestPharmacy.matrix.duration.text} de carro)`
         : ''
     },
     topTenPharmacies: function (state) {
