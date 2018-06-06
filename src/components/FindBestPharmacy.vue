@@ -2,8 +2,7 @@
   <div>
     <div class="pt-1 sticky-top text-left bg-light">
       <div class="d-inline-block align-top">
-        <button @click="backToPrescription()"
-                class="btn btn-light">
+        <button @click="backToPrescription()" class="btn btn-light">
           <i class="fas fa-arrow-left"></i>
         </button>
       </div>
@@ -13,21 +12,27 @@
       </div>
     </div>
     <best-pharmacy></best-pharmacy>
+    <div class="text-left">
+      <button @click="goToTopTen()" class="btn btn-link btn-sm">
+        <i class="fas fa-clipboard-list"></i>
+        Ver as 10 melhores farmácias...
+      </button>
+    </div>
     <medicaments-list :medicaments="prescriptedMedicaments" :showPrice="showPrice"></medicaments-list>
     <p class="alert alert-light msg">{{ alertMsg }}</p>
   </div>
 </template>
 
 <script>
-import MedicamentsList from './MedicamentsList'
 import BestPharmacy from './BestPharmacy'
+import MedicamentsList from './MedicamentsList'
 import { mapState } from 'vuex'
 
 export default {
   name: 'FindBestPharmacy',
   components: {
-    MedicamentsList,
-    BestPharmacy
+    BestPharmacy,
+    MedicamentsList
   },
   data: function () {
     return {
@@ -61,7 +66,11 @@ export default {
   methods: {
     // history.back()
     backToPrescription: function () {
-      this.$router.go(-1)
+      this.$router.push({ name: 'prescription' })
+    },
+    // go to top ten best pharmacies
+    goToTopTen: function () {
+      this.$router.push({ name: 'top-ten-pharmacies' })
     }
   }
 }
