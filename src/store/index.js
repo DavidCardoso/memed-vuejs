@@ -6,6 +6,7 @@ import gapi from 'google-distance-api'
 Vue.use(Vuex)
 
 const pharmaciesEndpoint = 'https://wydfdauvw5.execute-api.sa-east-1.amazonaws.com/desafio/farmacias'
+// const gmapsMatrixEndpoint = 'https://maps.googleapis.com/maps/api/distancematrix/json'
 
 export default new Vuex.Store({
   state: {
@@ -171,9 +172,9 @@ export default new Vuex.Store({
     }
   },
   getters: {
-    distance: function (state) {
-      return state.bestPharmacy.matrix.distance
-        ? '(a ' + state.bestPharmacy.matrix.distance + ')'
+    printDistanceDuration: function (state) {
+      return state.bestPharmacy.matrix
+        ? `(a ${state.bestPharmacy.matrix.distance}, em ${state.bestPharmacy.matrix.duration} de carro)`
         : ''
     }
   }

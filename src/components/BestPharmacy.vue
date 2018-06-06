@@ -6,12 +6,12 @@
         <i class="fas fa-flag"></i>
       </td>
       <td class="text-left">
-        <span class="font-weight-bold">{{ pharmacy.attributes.nome }}</span>
-        <span>{{ distance }}</span>
+        <span class="font-weight-bold">{{ bestPharmacy.attributes.nome }}</span>
+        <span>{{ printDistanceDuration }}</span>
         <br>
-        <div v-show="pharmacy.id">
+        <div v-show="bestPharmacy.id">
           <span>Total: </span>
-          <span class="price">{{ pharmacy.totalPrice }}</span>
+          <span class="price">{{ bestPharmacy.totalPrice }}</span>
         </div>
       </td>
     </tr>
@@ -32,10 +32,11 @@ export default {
     console.log('[3] mounted BestPharmacy')
   },
   computed: {
-    ...mapState({
-      pharmacy: 'bestPharmacy'
-    }),
-    ...mapGetters(['distance'])
+    printDistance () {
+      return this.$store.getters.printDistance()
+    },
+    ...mapState(['bestPharmacy']),
+    ...mapGetters(['printDistanceDuration'])
   },
   methods: {
     ...mapMutations(['updateBestPharmacy', 'updatePrescriptedMedicaments'])
