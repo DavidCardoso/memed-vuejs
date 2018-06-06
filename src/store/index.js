@@ -1,12 +1,11 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
-import gapi from 'google-distance-api'
 
 Vue.use(Vuex)
 
 const pharmaciesEndpoint = 'https://wydfdauvw5.execute-api.sa-east-1.amazonaws.com/desafio/farmacias'
-// const gmapsMatrixEndpoint = 'https://maps.googleapis.com/maps/api/distancematrix/json'
+const gmapsMatrixEndpoint = 'https://maps.googleapis.com/maps/api/distancematrix/json'
 
 export default new Vuex.Store({
   state: {
@@ -16,8 +15,14 @@ export default new Vuex.Store({
         nome: 'Buscando...'
       },
       matrix: {
-        distance: 0,
-        duration: 0
+        distance: {
+          text: '',
+          value: 0
+        },
+        duration: {
+          text: '',
+          value: 0
+        }
       },
       medicamentos: [],
       totalPrice: 0
@@ -48,7 +53,7 @@ export default new Vuex.Store({
     ]
   },
   mutations: {
-    // update pharmacis
+    // update pharmacies
     updatePharmacies (state, pharmacies) {
       state.pharmacies = pharmacies
     },
@@ -57,7 +62,7 @@ export default new Vuex.Store({
       let array = state.pharmacies
       // duration
       array.sort(function (a, b) {
-        return a.matrix.durationValue - b.matrix.durationValue
+        return a.matrix.duration.value - b.matrix.duration.value
       })
       // price
       array.sort(function (a, b) {
@@ -65,7 +70,7 @@ export default new Vuex.Store({
       })
       // distance
       array.sort(function (a, b) {
-        return a.matrix.distanceValue - b.matrix.distanceValue
+        return a.matrix.distance.value - b.matrix.distance.value
       })
       // change the state
       state.bestPharmacy = array[0]
@@ -126,6 +131,7 @@ export default new Vuex.Store({
     },
     // get pharmacies matrix data (distance, duration)
     getPharmaciesMatrix: async function ({ state, commit, dispatch }) {
+      // prepare request options
       // get origins
       const origins = await dispatch('getUserLocation').then(function (result) {
         return result
@@ -134,33 +140,39 @@ export default new Vuex.Store({
       const destinations = await dispatch('getDestinations').then(function (result) {
         return result
       })
-      // prepare request options
-      const options = {
-        key: process.env.GAPI_KEY,
-        mode: 'driving',
-        origins: origins,
-        destinations: destinations
-      }
+      // api key
+      const key = process.env.GAPI_KEY
+      // mode: driving, transit, etc
+      const mode = 'driving'
+      // build URI
+      const gapiUri = gmapsMatrixEndpoint +
+        '?key=' + key +
+        '&mode=' + mode +
+        '&origins=' + origins +
+        '&destinations=' + destinations
       // request all distance/duration from origins to destinations
-      gapi.distance(options, function (error, response) {
-        if (error) {
-          return console.log('Error fetching matrix api: ' + error)
+      let client = new XMLHttpRequest()
+      client.responseType = 'json'
+      client.open('GET', gapiUri)
+      client.send()
+      client.onreadystatechange = function () {
+        if (this.readyState === 4) {
+          let pharmacies = state.pharmacies
+          // as known that MAPS DISTANCE MATRIX api
+          // returns at the same order of the destinations
+          // it is possible to iterate each pharmacies and set its matrix data
+          // using a simple loop
+          this.response.rows[0].elements.forEach(function (item, index) {
+            pharmacies[index].matrix = item
+          })
+          // SAVE changes
+          commit('updatePharmacies', pharmacies)
         }
-        // as known that MAPS DISTANCE MATRIX api
-        // returns at the same order of the destinations
-        // it is possible to iterate each pharmacies and set its matrix data
-        // using a simple loop
-        let pharmacies = state.pharmacies
-        response.forEach(function (item, index) {
-          pharmacies[index].matrix = item
-        })
-        // SAVE changes
-        commit('updatePharmacies', pharmacies)
-      })
+      }
     },
     // get user device | memed geolocation
     getUserLocation: function () {
-      return ['-23.5648304,-46.6436604']
+      return '-23.5648304,-46.6436604'
     },
     // build maps matrix API destinations
     getDestinations: function ({ state }) {
@@ -168,13 +180,13 @@ export default new Vuex.Store({
         result.push(pharmacy.attributes.lat + ',' + pharmacy.attributes.lon)
         return result
       }, [])
-      return destinations
+      return destinations.join('|')
     }
   },
   getters: {
     printDistanceDuration: function (state) {
       return state.bestPharmacy.matrix
-        ? `(a ${state.bestPharmacy.matrix.distance}, em ${state.bestPharmacy.matrix.duration} de carro)`
+        ? `(a ${state.bestPharmacy.matrix.distance.text}, em ${state.bestPharmacy.matrix.duration.text} de carro)`
         : ''
     },
     topTenPharmacies: function (state) {
