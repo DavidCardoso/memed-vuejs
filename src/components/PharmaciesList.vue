@@ -38,7 +38,7 @@ export default {
   },
   methods: {
     printDistanceDuration: function (pharmacy) {
-      return `(a ${pharmacy.matrix.distance.text}, em ${pharmacy.matrix.duration.text} de carro)`
+      return `(a ${pharmacy.matrix.distance.text}, ${pharmacy.matrix.duration.text} de carro)`
     }
   }
 }
