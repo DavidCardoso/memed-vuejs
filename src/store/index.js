@@ -176,6 +176,9 @@ export default new Vuex.Store({
       return state.bestPharmacy.matrix
         ? `(a ${state.bestPharmacy.matrix.distance}, em ${state.bestPharmacy.matrix.duration} de carro)`
         : ''
+    },
+    topTenPharmacies: function (state) {
+      return state.pharmacies.slice(0, 10)
     }
   }
 })

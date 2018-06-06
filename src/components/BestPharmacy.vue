@@ -1,22 +1,24 @@
 <template>
-  <table class="table table-hover">
-  <tbody>
-    <tr>
-      <td style="vertical-align: middle;">
-        <i class="fas fa-flag"></i>
-      </td>
-      <td class="text-left">
-        <span class="font-weight-bold">{{ bestPharmacy.attributes.nome }}</span>
-        <span>{{ printDistanceDuration }}</span>
-        <br>
-        <div v-show="bestPharmacy.id">
-          <span>Total: </span>
-          <span class="price">{{ bestPharmacy.totalPrice }}</span>
-        </div>
-      </td>
-    </tr>
-  </tbody>
-  </table>
+  <div>
+    <table class="table table-hover">
+    <tbody>
+      <tr>
+        <td style="vertical-align: middle;">
+          <i class="fas fa-trophy"></i>
+        </td>
+        <td class="text-left">
+          <span class="font-weight-bold">{{ bestPharmacy.attributes.nome }}</span>
+          <span>{{ printDistanceDuration }}</span>
+          <br>
+          <div v-show="bestPharmacy.id">
+            <span>Total: </span>
+            <span class="price">{{ bestPharmacy.totalPrice }}</span>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+    </table>
+  </div>
 </template>
 
 <script>
@@ -32,9 +34,6 @@ export default {
     console.log('[3] mounted BestPharmacy')
   },
   computed: {
-    printDistance () {
-      return this.$store.getters.printDistance()
-    },
     ...mapState(['bestPharmacy']),
     ...mapGetters(['printDistanceDuration'])
   },
